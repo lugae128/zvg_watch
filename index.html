@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZVG Objekt öffnen</title>
+<style>body{font-family:system-ui,sans-serif;margin:2rem 1rem;color:#222}button{font-size:1.1rem;padding:.6rem 1rem}</style>
+</head>
+<body>
+<!-- zvg-portal.de blocks direct links to object pages, but accepts a search POST.
+     This page submits a search for one Aktenzeichen; the result page lists exactly that object. -->
+<form id="f" method="post" action="https://www.zvg-portal.de/index.php?button=Suchen">
+  <input type="hidden" name="ger_name" value="-- Alle Amtsgerichte --">
+  <input type="hidden" name="order_by" value="2">
+  <input type="hidden" name="land_abk" id="land">
+  <input type="hidden" name="ger_id" value="0">
+  <input type="hidden" name="az1" id="az1"><input type="hidden" name="az2" id="az2">
+  <input type="hidden" name="az3" id="az3"><input type="hidden" name="az4" id="az4">
+  <input type="hidden" name="art" value=""><input type="hidden" name="obj" value="">
+  <input type="hidden" name="str" value=""><input type="hidden" name="hnr" value="">
+  <input type="hidden" name="plz" value=""><input type="hidden" name="ort" value="">
+  <input type="hidden" name="ortsteil" value=""><input type="hidden" name="vtermin" value="">
+  <input type="hidden" name="btermin" value="">
+  <p id="msg">Öffne zvg-portal.de …</p>
+  <button type="submit">Weiter zum Portal</button>
+</form>
+<script>
+  const q = new URLSearchParams(location.search);
+  // e.g. "0007 K 0007/ 2024" or "0070 K 0024/2024"
+  const m = (q.get("az") || "").match(/(\d+)\s*([A-Za-z]*)\s*K\s*(\d+)\s*\/\s*(\d+)/);
+  if (m && q.get("land")) {
+    document.getElementById("land").value = q.get("land");
+    ["az1", "az2", "az3", "az4"].forEach((id, i) => document.getElementById(id).value = m[i + 1]);
+    document.getElementById("f").submit();
+  } else {
+    document.getElementById("msg").textContent = "Ungültiger Link (Aktenzeichen fehlt).";
+  }
+</script>
+</body>
+</html>
